@@ -18,7 +18,10 @@ class CreateView(generics.ListCreateAPIView):
     queryset = TodoList.objects.all()
     serializer_class = TodoListSerializer
     permission_classes = (permissions.IsAuthenticated, IsOwner)
-
+    
+    def get_queryset(self):
+        return self.queryset.filter(owner=self.request.user)
+    
     def perform_create(self, serializer):
         """Save the post data when creating a new bucketlist."""
         serializer.save(owner=self.request.user)
